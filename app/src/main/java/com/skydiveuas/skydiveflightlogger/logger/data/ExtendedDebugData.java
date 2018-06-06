@@ -1,11 +1,8 @@
-package com.skydiveuas.skydiveflightlogger.logger;
+package com.skydiveuas.skydiveflightlogger.logger.data;
 
 import com.skydive.java.CommMessage;
 import com.skydive.java.data.ControlData;
 import com.skydive.java.data.DebugData;
-import com.skydive.java.data.GpsData;
-import com.skydive.java.data.ImuData;
-import com.skydive.java.data.StateVector;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -18,13 +15,13 @@ import java.util.Arrays;
 public class ExtendedDebugData {
     private static final String DEBUG_TAG = ExtendedDebugData.class.getSimpleName();
 
-    public ControlData controlData;
-    public StateVector stateVector;
-    public GpsData gpsData;
-    public ImuData imuData;
-    public float motors[] = new float[8];
-    public DebugData.ControllerState controllerState;
-    public int timestamp;
+    ControlData controlData;
+    StateVector stateVector;
+    GpsData gpsData;
+    ImuData imuData;
+    float motors[] = new float[8];
+    DebugData.ControllerState controllerState;
+    int timestamp;
 
     private int crcValue;
 

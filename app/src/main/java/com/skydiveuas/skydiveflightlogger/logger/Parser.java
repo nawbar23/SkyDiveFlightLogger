@@ -2,12 +2,7 @@ package com.skydiveuas.skydiveflightlogger.logger;
 
 import android.util.Log;
 
-import com.skydive.java.CommMessage;
-import com.skydive.java.data.CalibrationSettings;
-import com.skydive.java.data.ControlSettings;
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
+import com.skydiveuas.skydiveflightlogger.logger.data.ExtendedDebugData;
 
 /**
  * Created by Bartosz Nawrot on 2018-06-06.

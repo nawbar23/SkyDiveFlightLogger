@@ -5,6 +5,7 @@ import android.util.Log;
 import com.skydive.java.CommInterface;
 import com.skydive.java.data.CalibrationSettings;
 import com.skydive.java.data.ControlSettings;
+import com.skydiveuas.skydiveflightlogger.logger.data.ExtendedDebugData;
 
 import java.io.IOException;
 import java.util.Timer;
