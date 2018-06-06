@@ -41,33 +41,45 @@ public class Logger implements CommInterface.CommInterfaceListener, Parser.Liste
         state = State.W4_CALIB;
     }
 
-    @Override
-    public void onReceived(CalibrationSettings message) {
-        if (state == State.W4_CALIB) {
-            // TODO safe to file
-            state = State.W4_CONTROL;
-        } else {
-            Log.e(DEBUG_TAG, "onReceived(CalibrationSettings) in bad state");
-        }
+    private void onReceived(CalibrationSettings message) {
+        startLog();
+        // TODO safe to file
+        state = State.W4_CONTROL;
+    }
+
+    private void onReceived(ControlSettings message) {
+        // TODO safe to file
+        state = State.LOGGING;
+    }
+
+    private void onReceived(ExtendedDebugData message) {
+        // TODO safe to file
+        received = true;
     }
 
     @Override
-    public void onReceived(ControlSettings message) {
-        if (state == State.W4_CALIB) {
-            // TODO safe to file
-            startLog();
-        } else {
-            Log.e(DEBUG_TAG, "onReceived(ControlSettings) in bad state");
-        }
-    }
+    public void onReceived(byte[] data) {
+        switch (state) {
+            case W4_CALIB:
+                CalibrationSettings calS = new CalibrationSettings(data);
+                if (calS.isValid()) {
+                    onReceived(calS);
+                }
+                break;
 
-    @Override
-    public void onReceived(ExtendedDebugData message) {
-        if (state == State.LOGGING) {
-            // TODO safe to file
-            received = true;
-        } else {
-            Log.e(DEBUG_TAG, "onReceived(ExtendedDebugData) in bad state");
+            case W4_CONTROL:
+                ControlSettings conS = new ControlSettings(data);
+                if (conS.isValid()) {
+                    onReceived(conS);
+                }
+                break;
+
+            case LOGGING:
+                ExtendedDebugData extD = new ExtendedDebugData(data);
+                if (extD.isValid()) {
+                    onReceived(extD);
+                }
+                break;
         }
     }
 
@@ -122,7 +134,6 @@ public class Logger implements CommInterface.CommInterfaceListener, Parser.Liste
         statusTimer = new Timer();
         statusTimer.scheduleAtFixedRate(statusTask, STATUS_UPDATE_INTERVAL, STATUS_UPDATE_INTERVAL);
         listener.onStarted();
-        state = State.LOGGING;
     }
 
     private void endLog() {
