@@ -1,5 +1,6 @@
 package com.skydiveuas.skydiveflightlogger.logger;
 
+import android.os.Environment;
 import android.util.Log;
 
 import com.skydive.java.CommInterface;
@@ -7,7 +8,11 @@ import com.skydive.java.data.CalibrationSettings;
 import com.skydive.java.data.ControlSettings;
 import com.skydiveuas.skydiveflightlogger.logger.data.ExtendedDebugData;
 
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -27,6 +32,8 @@ public class Logger implements CommInterface.CommInterfaceListener, Parser.Liste
 
     private Listener listener;
     private Parser parser;
+
+    private File logFile;
 
     private Timer timeoutTimer;
     private Timer statusTimer;
@@ -148,7 +155,26 @@ public class Logger implements CommInterface.CommInterfaceListener, Parser.Liste
     }
 
     private void openFile() {
-        // TODO open new files
+        File externalDir = Environment.getExternalStorageDirectory();
+        File loggerDir = new File(externalDir, "skydive_floghtlogger");
+
+        boolean success = true;
+        if (!loggerDir.exists()) {
+            success = loggerDir.mkdirs();
+        }
+
+        if (success) {
+            SimpleDateFormat simpleDate =  new SimpleDateFormat("yyyyMMDDHHmmss", Locale.UK);
+            String name = simpleDate.format(new Date());
+            logFile = new File(loggerDir, name + ".txt");
+            if (!logFile.exists()) {
+                Log.e(DEBUG_TAG, "Can not create log file");
+            } else {
+                Log.e(DEBUG_TAG, "Log file created: " + logFile.getAbsolutePath());
+            }
+        } else {
+            Log.e(DEBUG_TAG, "Can not create log file");
+        }
     }
 
     private void closeFile() {
